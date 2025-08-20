@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>California Housing Price Predictor</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>California Housing Price Predictor</h1>
+    <form id="predictForm">
+      <div class="form-group">
+        <label for="MedInc">Median Income:</label>
+        <input type="number" step="0.01" id="MedInc" name="MedInc" required>
+      </div>
+
+      <div class="form-group">
+        <label for="HouseAge">House Age:</label>
+        <input type="number" id="HouseAge" name="HouseAge" required>
+      </div>
+
+      <div class="form-group">
+        <label for="AveRooms">Average Rooms:</label>
+        <input type="number" step="0.01" id="AveRooms" name="AveRooms" required>
+      </div>
+
+      <div class="form-group">
+        <label for="AveBedrms">Average Bedrooms:</label>
+        <input type="number" step="0.01" id="AveBedrms" name="AveBedrms" required>
+      </div>
+
+      <div class="form-group">
+        <label for="Population">Population:</label>
+        <input type="number" id="Population" name="Population" required>
+      </div>
+
+      <div class="form-group">
+        <label for="AveOccup">Average Occupancy:</label>
+        <input type="number" step="0.01" id="AveOccup" name="AveOccup" required>
+      </div>
+
+      <div class="form-group">
+        <label for="Latitude">Latitude:</label>
+        <input type="number" step="0.01" id="Latitude" name="Latitude" required>
+      </div>
+
+      <div class="form-group">
+        <label for="Longitude">Longitude:</label>
+        <input type="number" step="0.01" id="Longitude" name="Longitude" required>
+      </div>
+
+      <button type="submit">Predict Price</button>
+    </form>
+
+    <h2 id="result"></h2>
+  </div>
+
+  <script>
+    document.getElementById("predictForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      const formData = new FormData(this);
+      const data = {};
+      formData.forEach((value, key) => {
+        data[key] = parseFloat(value);
+      });
+
+      const response = await fetch("http://127.0.0.1:5000/predict", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      const result = await response.json();
+      document.getElementById("result").textContent = 
+        "Predicted House Price: $" + result.prediction.toLocaleString();
+    });
+  </script>
+</body>
+</html>
